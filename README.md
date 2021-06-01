@@ -66,7 +66,7 @@ Há muitos protocolos projetados para padronizar APIs, um dos mais famosos, e o 
 ### 2.1.2 OpenAPI:
 A especificação OpenAPI surgiu recentemente, e vem se tornando o pradrão definitivo para APIs REST. A especificação detalha formas para desenvolver Interfaces REST, para que usuários consigam entender-las através de dedução. A especificação OpenAPI será seguida para desenvolver a API deste trabalho.
 
-Sources: https://www.redhat.com/en/topics/api/what-are-application-programming-interfaces
+sources: https://www.redhat.com/en/topics/api/what-are-application-programming-interfaces
 
 ## 2.2 NestJS:
 ## 2.3 Autenticação:
@@ -85,20 +85,23 @@ A autenticação principal será feita através de JWTs, gerados e assinados pel
 #### 2.3.1.1 @nestjs/jwt:
 A biblioteca `@nestjs/jwt` fornece utilidades jwt, baseadas no pacote `auth0/node-jsonwebtoken`
 
-Sources: https://github.com/nestjs/jwt
+sources: https://github.com/nestjs/jwt
 
 #### 2.3.1.2 passport-jwt:
 A biblioteca `passport-jwt` fornece uma estratégia de autenticação de endpoints, utilizando JSON Web Tokens, seu uso é destinado para proteger APIs RESTful sem o uso de sessões.
 
-Sources: http://www.passportjs.org/packages/passport-jwt/
+sources: http://www.passportjs.org/packages/passport-jwt/
 
 ### 2.3.2 OAuth 2.0:
 A autorização gerada pela framework OAuth 2.0 permite que um aplicativo de terceiros obtenha acesso limitado a um serviço HTTP, seja em nome de um proprietário de recurso orquestrando uma interação de aprovação entre o proprietário do recurso e o serviço HTTP ou permitindo que o aplicativo de terceiros obter acesso em seu próprio nome. 
 
 sources: https://datatracker.ietf.org/doc/html/rfc6749
 #### 2.3.2 OAuth2 via Google API:
-O provedor inicial para autenticação OAuth2 escolhido foi a google, devido a sua presença prevalente no setor coorporativo. **NEEDS DATA**
-Sources: https://developers.google.com/identity/protocols/oauth2
+**NEEDS DATA**
+
+O provedor inicial para autenticação OAuth2 escolhido foi a google, devido a sua presença prevalente no setor coorporativo. 
+
+sources: https://developers.google.com/identity/protocols/oauth2
 ## 2.4 Web Hooks:
 ## 2.5 Web Security:
 # 3. Desenvolvimento:
