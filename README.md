@@ -96,7 +96,7 @@ sources: http://www.passportjs.org/packages/passport-jwt/
 A autorização gerada pela framework OAuth 2.0 permite que um aplicativo de terceiros obtenha acesso limitado a um serviço HTTP, seja em nome de um proprietário de recurso orquestrando uma interação de aprovação entre o proprietário do recurso e o serviço HTTP ou permitindo que o aplicativo de terceiros obter acesso em seu próprio nome. 
 
 sources: https://datatracker.ietf.org/doc/html/rfc6749
-#### 2.3.2 OAuth2 via Google API:
+#### 2.3.2.1 OAuth2 via Google API:
 **NEEDS DATA**
 
 O provedor inicial para autenticação OAuth2 escolhido foi a google, devido a sua presença prevalente no setor coorporativo. 
