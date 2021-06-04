@@ -31,7 +31,7 @@ O objetivo geral deste trabalho é disponibilizar um sistema de reserva e checki
 O sistema será composto por dois aplicativos para dispositivos móveis que consumirão uma API principal:
 
 - **Aplicativo destinado ao usuário**: O aplicativo será o meio que o funcionário usará para verificar disponibilidades, realizar reservas e gerar um código para checkin.
-- **Aplicativo Totem**: O objetivo deste aplicativo, é ser implantado em dispositivos que disponíveis em áreas comuns, como recepções para que os funcionários consigam entrar com seu código temporário e confirmar seu checkin.
+- **Aplicativo Totem**: O objetivo deste aplicativo, é ser implantado em dispositivos disponíveis em áreas comuns, como recepções para que os funcionários consigam entrar com seu código temporário e confirmar seu checkin.
 - **API**: A API será responsável por expor rotas que serão consumidas por ambos aplicativos. Todo acesso aos dados será feito por ela, sendo necessário diferentes níveis de permissão para cada funcionalidade.
 
 ## 1.2 Conteúdo do trabalho:
@@ -52,7 +52,7 @@ Uma forma de exemplificar APIs, seria tratá-las como contratos, com a documenta
 
 ### 2.1.1 REST (Representational State Transfer):
 
-Há muitos protocolos projetados para padronizar APIs, um dos mais famosos, e o que será utilizado no desenvolvimento deste trabalho, é o padrão REST significando "Transferência de Estado Representacional". APIs que aderem ao protocolo REST são denominadas APIs RESTful. Diferente de outros protocolos como SOPA, REST age mais como um estilo de arquitetura. Isso significa que para uma API ser classificada como RESTful, de acordo com a dissertação de Roy Fielding ([Architectural Styles and the Design of Network-based Software Architectures](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm)), basta cumprir as seguintes restrições:
+Há muitos protocolos projetados para padronizar APIs, um dos mais famosos, e o que será utilizado no desenvolvimento deste trabalho, é o padrão REST significando "Transferência de Estado Representacional". APIs que aderem ao protocolo REST são denominadas APIs RESTful. Diferente de outros protocolos como SOAP, REST age mais como um estilo de arquitetura. Isso significa que para uma API ser classificada como RESTful, de acordo com a dissertação de Roy Fielding ([Architectural Styles and the Design of Network-based Software Architectures](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm)), basta cumprir as seguintes restrições:
 
 - **Interface uniforme**: Esta é a restrição mais importante a se seguir quando projetando uma API RESTful. Para cumpri-la, é preciso:
 
@@ -76,7 +76,29 @@ A especificação OpenAPI surgiu recentemente, e vem se tornando o pradrão defi
 
 sources: https://www.redhat.com/en/topics/api/what-are-application-programming-interfaces
 
-### 2.1.3 NestJS:
+### 2.1.3 Tech Stack:
+
+A stack escolhida para o desenvolvimento da API foi Typescript + Node.js.
+
+Node.js é uma das ferramenta mais utilizada para desenvolvimento:
+
+![graph](images/graph-2.png)
+
+[Most used libraries, frameworks, and tools among developers, worldwide, as of early 2020](https://www.statista.com/statistics/793840/worldwide-developer-survey-most-used-frameworks)
+
+Devido a sua popularidade, muitos problemas que são normalmente encontrados durante o desenvolvimento de uma API, já foram solucionados pela comunidade. Isso torna a implementação do projeto, algo mais simples, além de contribuir com sua qualidade.
+
+A linguagem typescript foi escolhida como a linguagem principal do projeto pelas suas vantagens quando comparado com javascript tradicional:
+- Orientação a Objetos: Conceitos como classes, interfaces e herança são suportados por typescript, tornando o código mais organizado.
+- Legibilidade: Tipagem explicita torna o código mais auto-explicativo. Possibilitando muitas vezes entede-lo olhando apenas para as assinaturas das funções e atributos dos objetos.
+- Debbuging: De acordo com o estudo [To Type or Not to Type:
+Quantifying Detectable Bugs in JavaScript](https://earlbarr.com/publications/typestudy.pdf), typescript consegue detectar 15% dos bugs mais comuns de javascript, durante a fase de transpilação.
+
+Embora isso resulte em um código mais verboso, devido ao tamanho do projeto, organização e legibilidade são uns dos fatores mais importantes a se considerar.
+
+#### 2.1.3.1 Node.js:
+
+#### 2.1.3.2 NestJS:
 
 NestJS é uma framework Open Source para construir aplicações backend em Node.js de forma versátil, escalável e fracamente acoplada.
 
@@ -146,4 +168,4 @@ sources: https://digitalguardian.com/blog/what-role-based-access-control-rbac-ex
 
 # 3. Desenvolvimento:
 
-## 3.1 Arquitetura do sistema
+## 3.1 Arquitetura do sistema:
