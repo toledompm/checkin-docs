@@ -89,18 +89,25 @@ Node.js é uma das ferramenta mais utilizada para desenvolvimento:
 Devido a sua popularidade, muitos problemas que são normalmente encontrados durante o desenvolvimento de uma API, já foram solucionados pela comunidade. Isso torna a implementação do projeto, algo mais simples, além de contribuir com sua qualidade.
 
 A linguagem typescript foi escolhida como a linguagem principal do projeto pelas suas vantagens quando comparado com javascript tradicional:
+
 - Orientação a Objetos: Conceitos como classes, interfaces e herança são suportados por typescript, tornando o código mais organizado.
 - Legibilidade: Tipagem explicita torna o código mais auto-explicativo. Possibilitando muitas vezes entede-lo olhando apenas para as assinaturas das funções e atributos dos objetos.
 - Debbuging: De acordo com o estudo [To Type or Not to Type:
-Quantifying Detectable Bugs in JavaScript](https://earlbarr.com/publications/typestudy.pdf), typescript consegue detectar 15% dos bugs mais comuns de javascript, durante a fase de transpilação.
+  Quantifying Detectable Bugs in JavaScript](https://earlbarr.com/publications/typestudy.pdf), typescript consegue detectar 15% dos bugs mais comuns de javascript, durante a fase de transpilação.
 
 Embora isso resulte em um código mais verboso, devido ao tamanho do projeto, organização e legibilidade são uns dos fatores mais importantes a se considerar.
 
 #### 2.1.3.1 Node.js:
 
+NodeJS é um ambiente de execução JavaScript baseado em eventos assíncronos, o Node.js foi projetado para construir aplicativos de rede escalonáveis.
+
+Isso vai contra modelos de simultaneidade mais comuns de hoje, que utilizam threads de Sistemas Operacionais. Redes baseadas em threads são relativamente ineficientes e muito difíceis de utilizar. Além disso, os usuários do Node.js não precisam se preocupar com dead-locks, já que não há bloqueio de recursos. Quase nenhuma função no Node.js realiza I/O diretamente, portanto, o processo nunca é bloqueado. Como nada bloqueia, sistemas escaláveis ​​são muito razoáveis ​​para desenvolver em Node.js.
+
+sources: https://nodejs.org/en/about
+
 #### 2.1.3.2 NestJS:
 
-NestJS é uma framework Open Source para construir aplicações backend em Node.js de forma versátil, escalável e fracamente acoplada.
+NestJS foi a framework escolhida para desenvolver a API. Ela é uma framework Open Source, feita para construir aplicações backend em Node.js de forma versátil, escalável e fracamente acoplada.
 
 Por baixo dos panos, outras frameworks e bibliotecas, já estabelecidas, são utilizadas, como `express` e `typeorm`.
 
@@ -166,6 +173,112 @@ sources: https://digitalguardian.com/blog/what-role-based-access-control-rbac-ex
 
 #### 2.4.2.1 TypeOrm:
 
-# 3. Desenvolvimento:
+# 3 Desenvolvimento:
 
-## 3.1 Arquitetura do sistema:
+Neste capítulo será detalhado o processo de desenvolvimento do sistema, desde arquitetura até funções especificas de cada componente.
+
+## 3.1 Arquitetura do sistema (API):
+
+Como citado no capítulo 2, uma das razões que a framework NestJS foi selecionada, foi o fato dela providenciar uma arquitetura "direto da caixa". Essa arquitetura foi usada como base para desenvolver a API.
+
+Assim como a arquitetura do Angular, a NestJS nos dá acesso a módulos. Cada módulo segue o padrão MVC, de forma isolada, fracamente acoplando os componentes.
+
+Dependências entre módulos são feitas através de injeção de dependência. O módulo dependente, deve importar o módulo provedor, e injetar o componente que necessita. As dependências do componente importado serão resolvidas pelo módulo provedor.
+
+## 3.2 Módulo App:
+
+O módulo APP tem a responsabilidade de importar todos outros módulos.
+
+```javascript
+@Module({
+  imports: [...moduleImports, TypeOrmModule.forRoot()],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+```
+
+[checkin-api/app.module.ts](https://github.com/toledompm/checkin-api/blob/main/src/app/app.module.ts)
+
+Quando o servidor é iniciado, uma nova `INestApplication` é criada a partir do `AppModule`.
+
+```javascript
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "src/app/app.module";
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+[checkin-api/main.ts](https://github.com/toledompm/checkin-api/blob/main/src/main.ts)
+
+## 3.3 Módulo Auth:
+
+O módulo `AuthModule`, tem a responsabilidade de definir as estratégias de autenticação da aplicação, além de expor rotas para emitir tokens de acesso.
+
+```javascript
+@Module({
+  imports: [jwtModule, UserModule],
+  providers: [...authProviders, ...serviceProviders],
+  controllers: [AuthController],
+})
+export class AuthModule {}
+```
+
+[checkin-api/auth.module.ts](https://github.com/toledompm/checkin-api/blob/main/src/auth/auth.module.ts)
+
+### 3.3.1 Controller:
+O controller expõe duas rotas, `google/login` e `google/redirect`.
+
+```javascript
+@Controller('auth')
+export class AuthController {
+  constructor(
+    @Inject(AUTH_SERVICE) private readonly authService: AuthService,
+  ) {}
+
+  /** 
+   * Entrypoint para a API OAuth 2.0 do google.
+  */
+  @Get('google/login')
+  @UseGuards(AuthGuard(GOOGLE_AUTH_STRATEGY))
+  googleLogin() {}
+
+  /**
+   * Após ser validado pelos serviços do google, o usuário é redirecionado de volta.
+   * Dessa vez, um novo objeto é adicionado a requisição: user.
+   * O Objeto user contém informações básicas sobre a conta google do usuário, essa informação
+   * é usada para encontrar o usuário na base de dados do sistema.
+  */
+  @Get('google/redirect')
+  @UseGuards(AuthGuard(GOOGLE_AUTH_STRATEGY))
+  googleAuthRedirect(@Req() { user }: Request) {
+    return this.authService.googleLogin(user);
+  }
+}
+```
+
+[checkin-api/auth.controller.ts](https://github.com/toledompm/checkin-api/blob/main/src/auth/auth.controller.ts)
+
+
+### 3.3.2 AuthService:
+
+O serviço providenciado por este módulo tem duas funções.
+- Validar usuários retornados pela API OAuth 2.0 do google.
+- Buscar usuários com base nos atributos recebidos por JWT decodificados.
+
+```javascript
+export interface AuthService {
+  googleLogin(user: UserDto): Record<string, any>;
+  getUserFromTokenAttributes(attributes: UserAuthTokenAtributes): Promise<User>;
+}
+```
+
+[checkin-api/main.ts](https://github.com/toledompm/checkin-api/blob/main/src/auth/auth.service.ts)
+
+### 3.3.3 Estratégias de Autenticação:
+
+O módulo `AuthModule` também é responsável por implementar todas estratégias de autenticação utilizadas pela aplicação. Como as estratégias implementam a interface `PassportStrategy` providenciada pela framework NestJS, não foi preciso importa-las individualmente, já que, após registradas no módulo `AuthModule`, a framework as disponibiliza através da função `AuthGuard`.
