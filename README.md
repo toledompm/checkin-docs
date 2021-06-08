@@ -56,9 +56,9 @@ Há muitos protocolos projetados para padronizar APIs, um dos mais famosos, e o 
 
 - **Interface uniforme**: Esta é a restrição mais importante a se seguir quando projetando uma API RESTful. Para cumpri-la, é preciso:
 
-  - Identificar recursos durante requisições;
-  - Permitir a manipulação de recursos, através de suas representações;
-  - Enviar mensagens auto-descritivas;
+- Identificar recursos durante requisições;
+- Permitir a manipulação de recursos, através de suas representações;
+- Enviar mensagens auto-descritivas;
 
 - **Arquitetura cliente-servidor**: A arquitetura é composta por clientes, servidores e recursos. Requisições são feitas utilizando o protocolo http.
 
@@ -72,7 +72,7 @@ Há muitos protocolos projetados para padronizar APIs, um dos mais famosos, e o 
 
 ### 2.1.2 OpenAPI:
 
-A especificação OpenAPI surgiu recentemente, e vem se tornando o pradrão definitivo para APIs REST. A especificação detalha formas para desenvolver Interfaces REST, para que usuários consigam entendê-las através de dedução. A especificação OpenAPI será seguida para desenvolver a API deste trabalho.
+A especificação OpenAPI surgiu recentemente, e vem se tornando o padrão definitivo para APIs REST. A especificação detalha formas para desenvolver Interfaces REST, para que usuários consigam entendê-las através de dedução. A especificação OpenAPI será seguida para desenvolver a API deste trabalho.
 
 sources: https://www.redhat.com/en/topics/api/what-are-application-programming-interfaces
 
@@ -91,8 +91,8 @@ Devido a sua popularidade, muitos problemas que são normalmente encontrados dur
 A linguagem typescript foi escolhida como a linguagem principal do projeto pelas suas vantagens quando comparado com javascript tradicional:
 
 - Orientação a Objetos: Conceitos como classes, interfaces e herança são suportados por typescript, tornando o código mais organizado.
-- Legibilidade: Tipagem explicita torna o código mais auto-explicativo. Possibilitando muitas vezes entede-lo olhando apenas para as assinaturas das funções e atributos dos objetos.
-- Debbuging: De acordo com o estudo [To Type or Not to Type:
+- Legibilidade: Tipagem explicita torna o código mais auto-explicativo. Possibilitando muitas vezes entendê-lo olhando apenas para as assinaturas das funções e atributos dos objetos.
+- Debugging: De acordo com o estudo [To Type or Not to Type:
   Quantifying Detectable Bugs in JavaScript](https://earlbarr.com/publications/typestudy.pdf), typescript consegue detectar 15% dos bugs mais comuns de javascript, durante a fase de transpilação.
 
 Embora isso resulte em um código mais verboso, devido ao tamanho do projeto, organização e legibilidade são uns dos fatores mais importantes a se considerar.
@@ -101,7 +101,7 @@ Embora isso resulte em um código mais verboso, devido ao tamanho do projeto, or
 
 NodeJS é um ambiente de execução JavaScript baseado em eventos assíncronos, o Node.js foi projetado para construir aplicativos de rede escalonáveis.
 
-Isso vai contra modelos de simultaneidade mais comuns de hoje, que utilizam threads de Sistemas Operacionais. Redes baseadas em threads são relativamente ineficientes e muito difíceis de utilizar. Além disso, os usuários do Node.js não precisam se preocupar com dead-locks, já que não há bloqueio de recursos. Quase nenhuma função no Node.js realiza I/O diretamente, portanto, o processo nunca é bloqueado. Como nada bloqueia, sistemas escaláveis ​​são muito razoáveis ​​para desenvolver em Node.js.
+Isso vai contra os modelos de simultaneidade mais comuns de hoje, que utilizam threads de Sistemas Operacionais. Redes baseadas em threads são relativamente ineficientes e muito difíceis de utilizar. Além disso, os usuários do Node.js não precisam se preocupar com deadlocks, já que não há bloqueio de recursos. Quase nenhuma função no Node.js realiza I/O diretamente, portanto, o processo nunca é bloqueado. Como nada bloqueia, sistemas escaláveis ​​são muito razoáveis ​​para desenvolver em Node.js.
 
 sources: https://nodejs.org/en/about
 
@@ -165,6 +165,8 @@ sources: https://digitalguardian.com/blog/what-role-based-access-control-rbac-ex
 
 ### 2.1.5 Jest:
 
+A framework de testes Jest foi utilizada.
+
 ## 2.2 Banco de Dados:
 
 ### 2.2.1 Postgres:
@@ -175,7 +177,7 @@ sources: https://digitalguardian.com/blog/what-role-based-access-control-rbac-ex
 
 # 3 Desenvolvimento:
 
-Neste capítulo será detalhado o processo de desenvolvimento do sistema, desde arquitetura até funções especificas de cada componente.
+Neste capítulo será detalhado o processo de desenvolvimento do sistema, desde arquitetura até funções específicas de cada componente.
 
 ## 3.1 Arquitetura do sistema (API):
 
@@ -183,7 +185,7 @@ Como citado no capítulo 2, uma das razões que a framework NestJS foi seleciona
 
 Assim como a arquitetura do Angular, a NestJS nos dá acesso a módulos. Cada módulo segue o padrão MVC, de forma isolada, fracamente acoplando os componentes.
 
-Dependências entre módulos são feitas através de injeção de dependência. O módulo dependente, deve importar o módulo provedor, e injetar o componente que necessita. As dependências do componente importado serão resolvidas pelo módulo provedor.
+Dependências entre módulos são resolvidas através de injeção de dependência. O módulo dependente, deve importar o módulo provedor, e injetar o componente que necessita. As dependências do componente importado serão resolvidas pelo módulo provedor.
 
 ## 3.2 Módulo App:
 
@@ -237,29 +239,29 @@ O controller expõe duas rotas, `google/login` e `google/redirect`.
 ```javascript
 @Controller('auth')
 export class AuthController {
-  constructor(
-    @Inject(AUTH_SERVICE) private readonly authService: AuthService,
-  ) {}
+ constructor(
+   @Inject(AUTH_SERVICE) private readonly authService: AuthService,
+ ) {}
 
-  /**
-   * Entrypoint para a API OAuth 2.0 do google.
-  */
-  @Get('google/login')
-  @UseGuards(AuthGuard(GOOGLE_AUTH_STRATEGY))
-  googleLogin() {}
+ /**
+  * Entrypoint para a API OAuth 2.0 do google.
+ */
+ @Get('google/login')
+ @UseGuards(AuthGuard(GOOGLE_AUTH_STRATEGY))
+ googleLogin() {}
 
-  /**
-   * Após ser validado pelos serviços do google, o usuário é redirecionado de volta,
-   * dessa vez, um novo objeto é adicionado a requisição: user. O Objeto user
-   * contém informações básicas sobre a conta google do usuário, essa informação
-   * é utilizada para encontrar o usuário na base de dados do sistema. Com todos os
-   * dados do usuário carregados, um token de autenticação é gerado e retornado.
-  */
-  @Get('google/redirect')
-  @UseGuards(AuthGuard(GOOGLE_AUTH_STRATEGY))
-  googleAuthRedirect(@Req() { user }: Request) {
-    return this.authService.googleLogin(user);
-  }
+ /**
+  * Após ser validado pelos serviços do google, o usuário é redirecionado de volta,
+  * dessa vez, um novo objeto é adicionado a requisição: user. O Objeto user
+  * contém informações básicas sobre a conta google do usuário, essa informação
+  * é utilizada para encontrar o usuário na base de dados do sistema. Com todos os
+  * dados do usuário carregados, um token de autenticação é gerado e retornado.
+ */
+ @Get('google/redirect')
+ @UseGuards(AuthGuard(GOOGLE_AUTH_STRATEGY))
+ googleAuthRedirect(@Req() { user }: Request) {
+   return this.authService.googleLogin(user);
+ }
 }
 ```
 
@@ -270,7 +272,7 @@ export class AuthController {
 O serviço providenciado por este módulo tem duas funções.
 
 - Validar usuários retornados pela API OAuth 2.0 do google, retornando um token de autenticação gerado pela API.
-- Buscar usuários com base nos atributos recebidos por decodificadar o token.
+- Buscar usuários com base nos atributos recebidos por decodificar o token.
 
 ```javascript
 export interface AuthService {
@@ -283,7 +285,7 @@ export interface AuthService {
 
 ### 3.3.3 Estratégias de Autenticação:
 
-O módulo `AuthModule` também é responsável por implementar todas estratégias de autenticação utilizadas pela aplicação. Como as estratégias extendem a classe abstrata `PassportStrategy` providenciada pela framework NestJS, não foi preciso importa-las individualmente, já que, após registradas no módulo `AuthModule`, a framework as disponibiliza através da função `AuthGuard`.
+O módulo `AuthModule` também é responsável por implementar todas estratégias de autenticação utilizadas pela aplicação. Como as estratégias extendem a classe abstrata `PassportStrategy` providenciada pela framework NestJS, não foi preciso importá-las individualmente, já que, após registradas no módulo `AuthModule`, a framework as disponibiliza através da função `AuthGuard`.
 
 #### 3.3.3.1 Estratégia OAuth 2.0:
 
@@ -295,42 +297,42 @@ import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 ...
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(
-  Strategy,
-  GOOGLE_AUTH_STRATEGY,
+ Strategy,
+ GOOGLE_AUTH_STRATEGY,
 ) {
-  constructor() {
-    super(Environment.config.auth.google);
-  }
+ constructor() {
+   super(Environment.config.auth.google);
+ }
 
-  validate(
-    _accessToken: string,
-    _refreshToken: string,
-    profile: any,
-    done: VerifyCallback,
-  ): void {
-    /**
-     * Primeiro, os dados nome e email são extraidos do perfil enviado pelos
-     * serviços Google.
+ validate(
+   _accessToken: string,
+   _refreshToken: string,
+   profile: any,
+   done: VerifyCallback,
+ ): void {
+   /**
+    * Primeiro, os dados nome e email são extraídos do perfil enviado pelos
+    * serviços Google.
+   */
+   const { name, emails } = profile;
+
+   /**
+    * Os valores extraídos são formatados conforme a entidade `UserDto`, definida
+    * pelo módulo `UserModule`.
     */
-    const { name, emails } = profile;
+   const userDto = {
+     email: emails[0].value,
+     firstName: name.givenName,
+     lastName: name.familyName,
+   };
 
-    /**
-     * Os valores extraídos são formatados conforme a entidade `UserDto`, definida
-     * pelo módulo `UserModule`.
-     */
-    const userDto = {
-      email: emails[0].value,
-      firstName: name.givenName,
-      lastName: name.familyName,
-    };
-
-    /**
-     * O objeto formatado é enviado para a função done, disponibilizada pela biblioteca
-     * passport-google-oauth20. Neste ponto, a requisição é redirecionada a rota google/redirect
-     * com as informações do usuário prontas para serem validadas.
-    */
-    done(null, userDto);
-  }
+   /**
+    * O objeto formatado é enviado para a função done, disponibilizada pela biblioteca
+    * passport-google-oauth20. Neste ponto, a requisição é redirecionada a rota google/redirect
+    * com as informações do usuário prontas para serem validadas.
+   */
+   done(null, userDto);
+ }
 }
 ```
 
@@ -338,7 +340,7 @@ export class GoogleStrategy extends PassportStrategy(
 
 #### 3.3.3.2 Estratégia JWT:
 
-Assim como a estratégia anterior, cabe a classe `JwtStrategy` configurar a classe pai com a estratégia fornecida pela biblioteca `passport-jwt`, e implementar a função abstrata `validate`.
+Assim como a estratégia anterior, cabe à classe `JwtStrategy` configurar a classe pai com a estratégia fornecida pela biblioteca `passport-jwt`, e implementar a função abstrata `validate`.
 
 ```javascript
 ...
@@ -346,32 +348,32 @@ import { Strategy } from 'passport-jwt';
 ...
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, JWT_AUTH_STRATEGY) {
-  @Inject(AUTH_SERVICE)
-  private readonly authService: AuthService;
+ @Inject(AUTH_SERVICE)
+ private readonly authService: AuthService;
 
-  constructor() {
-    const {
-      jwtFromRequest,
-      ignoreExpiration,
-      secret,
-    } = Environment.config.auth.jwt;
+ constructor() {
+   const {
+     jwtFromRequest,
+     ignoreExpiration,
+     secret,
+   } = Environment.config.auth.jwt;
 
-    super({
-      jwtFromRequest,
-      ignoreExpiration,
-      secretOrKey: secret,
-    });
-  }
+   super({
+     jwtFromRequest,
+     ignoreExpiration,
+     secretOrKey: secret,
+   });
+ }
 
-  async validate(payload: UserAuthTokenAtributes) {
-    /**
-     * Toda decodificação e autenticação do token é feita pela classe pai, retornando
-     * apenas os atributos do token. Cabe a função validate encontrar o usuário na base
-     * pelos atributos fornecidos. Para isso é utilizada a função definada no componente
-     * AuthService.
-    */
-    return this.authService.getUserFromTokenAttributes(payload);
-  }
+ async validate(payload: UserAuthTokenAtributes) {
+   /**
+    * Toda decodificação e autenticação do token é feita pela classe pai, retornando
+    * apenas os atributos do token. Cabe a função validate encontrar o usuário na base
+    * pelos atributos fornecidos. Para isso é utilizada a função definida no componente
+    * AuthService.
+   */
+   return this.authService.getUserFromTokenAttributes(payload);
+ }
 }
 ```
 
@@ -379,38 +381,39 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_AUTH_STRATEGY) {
 
 #### 3.3.3.3 Estratégia Role Based Access Control:
 
-A estratégia RBAC, diferente das anteriores, é implementada sem o auxilio da classe abstrata `PassportStrategy`. Esta estratégia é utilizada em conjunto com a estratégia JWT para rotas especificas que podem ser acessadas apenas por um determinado grupo de usuários.
+A estratégia RBAC, diferente das anteriores, é implementada sem o auxílio da classe abstrata `PassportStrategy`. Esta estratégia é utilizada em conjunto com a estratégia JWT para rotas específicas que podem ser acessadas apenas por um determinado grupo de usuários.
 
 A estratégia depende de dois componentes:
+
 - decorator `Roles`: O componente `Roles` permite especificar o nível de acesso necessário para cada rota.
 - classe `RolesGuard`: O componente `RolesGuard` é responsável por comparar o nível de acesso do usuário atual, com o nível especificado pelo decorator.
 
-A comunicação entre os dois componentes é feito através da classe helper `Reflector` e da função `SetMetadata`.
+A comunicação entre os dois componentes é feita através da classe helper `Reflector` e da função `SetMetadata`.
 
 ```javascript
 import { Reflector } from '@nestjs/core';
 import {
-  SetMetadata,
-  ...
+ SetMetadata,
+ ...
 } from '@nestjs/common';
 ...
 export const Roles = (...roles: UserRole[]) => SetMetadata(ROLES_KEY, roles);
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+ constructor(private reflector: Reflector) {}
 
-  canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
-      ROLES_KEY,
-      [context.getHandler(), context.getClass()],
-    );
-    if (!requiredRoles) {
-      return true;
-    }
-    const { user }: { user: User } = context.switchToHttp().getRequest();
-    return requiredRoles.some((role) => user.role === role);
-  }
+ canActivate(context: ExecutionContext): boolean {
+   const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
+     ROLES_KEY,
+     [context.getHandler(), context.getClass()],
+   );
+   if (!requiredRoles) {
+     return true;
+   }
+   const { user }: { user: User } = context.switchToHttp().getRequest();
+   return requiredRoles.some((role) => user.role === role);
+ }
 }
 ```
 
