@@ -95,7 +95,7 @@ A linguagem typescript foi escolhida como a linguagem principal do projeto pelas
 - Debugging: De acordo com o estudo [To Type or Not to Type:
   Quantifying Detectable Bugs in JavaScript](https://earlbarr.com/publications/typestudy.pdf), typescript consegue detectar 15% dos bugs mais comuns de javascript, durante a fase de transpilação.
 
-Embora isso resulte em um código mais verboso, devido ao tamanho do projeto, organização e legibilidade são uns dos fatores mais importantes a se considerar.
+Embora isso resulte em um código mais verboso, devido ao tamanho do projeto, as vantagens na organização e legibilidade se tornaram mais importantes.
 
 #### 2.1.3.1 Node.js:
 
@@ -113,7 +113,7 @@ Por baixo dos panos, outras frameworks e bibliotecas, já estabelecidas, são ut
 
 Nest adiciona uma camada de abstração entre o desenvolvedor e as funcionalidades das frameworks que utiliza, porém ainda é possível acessá-las diretamente, possibilitando utilizar as vastas extensões e módulos desenvolvidos por terceiros para estas frameworks.
 
-Com o crescimento da comunidade Node, surgiram várias ferramentas e bibliotecas excelentes, no entanto nenhuma soluciona o problema de **arquitetura**. Nest as empacota, e disponibiliza ao desenvolvedor de uma forma simples, seguindo uma arquitetura desenvolvida baseada no Angular.
+Com o crescimento da comunidade Node, surgiram várias ferramentas e bibliotecas excelentes, no entanto nenhuma soluciona o problema de **arquitetura**. A framework NestJS soluciona esse problema empacotando essas ferramentas já existentes, e as disponibiliza ao desenvolvedor de uma forma simples, seguindo uma arquitetura desenvolvida baseada no Angular.
 
 sources: https://docs.nestjs.com/
 
