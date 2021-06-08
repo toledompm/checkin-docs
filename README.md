@@ -191,7 +191,7 @@ Dependências entre módulos são resolvidas através de injeção de dependênc
 
 O módulo APP tem a responsabilidade de importar todos outros módulos.
 
-```javascript
+```typescript
 @Module({
   imports: [...moduleImports, TypeOrmModule.forRoot()],
   controllers: [AppController],
@@ -204,7 +204,7 @@ export class AppModule {}
 
 Quando o servidor é iniciado, uma nova `INestApplication` é criada a partir do `AppModule`.
 
-```javascript
+```typescript
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "src/app/app.module";
 
@@ -221,7 +221,7 @@ bootstrap();
 
 O módulo `AuthModule`, tem a responsabilidade de definir as estratégias de autenticação da aplicação, além de expor rotas para emitir tokens de acesso.
 
-```javascript
+```typescript
 @Module({
   imports: [jwtModule, UserModule],
   providers: [...authProviders, ...serviceProviders],
@@ -236,32 +236,32 @@ export class AuthModule {}
 
 O controller expõe duas rotas, `google/login` e `google/redirect`.
 
-```javascript
-@Controller('auth')
+```typescript
+@Controller("auth")
 export class AuthController {
- constructor(
-   @Inject(AUTH_SERVICE) private readonly authService: AuthService,
- ) {}
+  constructor(
+    @Inject(AUTH_SERVICE) private readonly authService: AuthService
+  ) {}
 
- /**
-  * Entrypoint para a API OAuth 2.0 do google.
- */
- @Get('google/login')
- @UseGuards(AuthGuard(GOOGLE_AUTH_STRATEGY))
- googleLogin() {}
+  /**
+   * Entrypoint para a API OAuth 2.0 do google.
+   */
+  @Get("google/login")
+  @UseGuards(AuthGuard(GOOGLE_AUTH_STRATEGY))
+  googleLogin() {}
 
- /**
-  * Após ser validado pelos serviços do google, o usuário é redirecionado de volta,
-  * dessa vez, um novo objeto é adicionado a requisição: user. O Objeto user
-  * contém informações básicas sobre a conta google do usuário, essa informação
-  * é utilizada para encontrar o usuário na base de dados do sistema. Com todos os
-  * dados do usuário carregados, um token de autenticação é gerado e retornado.
- */
- @Get('google/redirect')
- @UseGuards(AuthGuard(GOOGLE_AUTH_STRATEGY))
- googleAuthRedirect(@Req() { user }: Request) {
-   return this.authService.googleLogin(user);
- }
+  /**
+   * Após ser validado pelos serviços do google, o usuário é redirecionado de volta,
+   * dessa vez, um novo objeto é adicionado a requisição: user. O Objeto user
+   * contém informações básicas sobre a conta google do usuário, essa informação
+   * é utilizada para encontrar o usuário na base de dados do sistema. Com todos os
+   * dados do usuário carregados, um token de autenticação é gerado e retornado.
+   */
+  @Get("google/redirect")
+  @UseGuards(AuthGuard(GOOGLE_AUTH_STRATEGY))
+  googleAuthRedirect(@Req() { user }: Request) {
+    return this.authService.googleLogin(user);
+  }
 }
 ```
 
@@ -274,7 +274,7 @@ O serviço providenciado por este módulo tem duas funções.
 - Validar usuários retornados pela API OAuth 2.0 do google, retornando um token de autenticação gerado pela API.
 - Buscar usuários com base nos atributos recebidos por decodificar o token.
 
-```javascript
+```typescript
 export interface AuthService {
   googleLogin(user: UserDto): Record<string, any>;
   getUserFromTokenAttributes(attributes: UserAuthTokenAtributes): Promise<User>;
@@ -291,49 +291,50 @@ O módulo `AuthModule` também é responsável por implementar todas estratégia
 
 A classe `GoogleStrategy` herda os atributos da classe `PassportStrategy`, passando as configurações importadas da biblioteca `passport-google-oauth20`. Com isso, a maior parte da comunicação e redirecionamento já está pronta, basta implementar a função abstrata `validate`.
 
-```javascript
+```typescript
 ...
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 ...
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(
- Strategy,
- GOOGLE_AUTH_STRATEGY,
+  Strategy,
+  GOOGLE_AUTH_STRATEGY
 ) {
- constructor() {
-   super(Environment.config.auth.google);
- }
+  constructor() {
+    super(Environment.config.auth.google);
+  }
 
- validate(
-   _accessToken: string,
-   _refreshToken: string,
-   profile: any,
-   done: VerifyCallback,
- ): void {
-   /**
-    * Primeiro, os dados nome e email são extraídos do perfil enviado pelos
-    * serviços Google.
-   */
-   const { name, emails } = profile;
+  validate(
+    _accessToken: string,
+    _refreshToken: string,
+    profile: any,
+    done: VerifyCallback
+  ): void {
+    /**
+     * Primeiro, os dados nome e email são extraídos do perfil enviado pelos
+     * serviços Google.
+     */
+    const { name, emails } = profile;
 
-   /**
-    * Os valores extraídos são formatados conforme a entidade `UserDto`, definida
-    * pelo módulo `UserModule`.
-    */
-   const userDto = {
-     email: emails[0].value,
-     firstName: name.givenName,
-     lastName: name.familyName,
-   };
+    /**
+     * Os valores extraídos são formatados conforme a entidade `UserDto`, definida
+     * pelo módulo `UserModule`.
+     */
+    const userDto = {
+      email: emails[0].value,
+      firstName: name.givenName,
+      lastName: name.familyName,
+    };
 
-   /**
-    * O objeto formatado é enviado para a função done, disponibilizada pela biblioteca
-    * passport-google-oauth20. Neste ponto, a requisição é redirecionada a rota google/redirect
-    * com as informações do usuário prontas para serem validadas.
-   */
-   done(null, userDto);
- }
+    /**
+     * O objeto formatado é enviado para a função done, disponibilizada pela biblioteca
+     * passport-google-oauth20. Neste ponto, a requisição é redirecionada a rota google/redirect
+     * com as informações do usuário prontas para serem validadas.
+     */
+    done(null, userDto);
+  }
 }
+
 ```
 
 [checkin-api/google.strategy.ts](https://github.com/toledompm/checkin-api/blob/main/src/auth/strategies/google.strategy.ts)
@@ -342,38 +343,35 @@ export class GoogleStrategy extends PassportStrategy(
 
 Assim como a estratégia anterior, cabe à classe `JwtStrategy` configurar a classe pai com a estratégia fornecida pela biblioteca `passport-jwt`, e implementar a função abstrata `validate`.
 
-```javascript
+```typescript
 ...
 import { Strategy } from 'passport-jwt';
 ...
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, JWT_AUTH_STRATEGY) {
- @Inject(AUTH_SERVICE)
- private readonly authService: AuthService;
+  @Inject(AUTH_SERVICE)
+  private readonly authService: AuthService;
 
- constructor() {
-   const {
-     jwtFromRequest,
-     ignoreExpiration,
-     secret,
-   } = Environment.config.auth.jwt;
+  constructor() {
+    const { jwtFromRequest, ignoreExpiration, secret } =
+      Environment.config.auth.jwt;
 
-   super({
-     jwtFromRequest,
-     ignoreExpiration,
-     secretOrKey: secret,
-   });
- }
+    super({
+      jwtFromRequest,
+      ignoreExpiration,
+      secretOrKey: secret,
+    });
+  }
 
- async validate(payload: UserAuthTokenAtributes) {
-   /**
-    * Toda decodificação e autenticação do token é feita pela classe pai, retornando
-    * apenas os atributos do token. Cabe a função validate encontrar o usuário na base
-    * pelos atributos fornecidos. Para isso é utilizada a função definida no componente
-    * AuthService.
-   */
-   return this.authService.getUserFromTokenAttributes(payload);
- }
+  async validate(payload: UserAuthTokenAtributes) {
+    /**
+     * Toda decodificação e autenticação do token é feita pela classe pai, retornando
+     * apenas os atributos do token. Cabe a função validate encontrar o usuário na base
+     * pelos atributos fornecidos. Para isso é utilizada a função definida no componente
+     * AuthService.
+     */
+    return this.authService.getUserFromTokenAttributes(payload);
+  }
 }
 ```
 
@@ -390,7 +388,7 @@ A estratégia depende de dois componentes:
 
 A comunicação entre os dois componentes é feita através da classe helper `Reflector` e da função `SetMetadata`.
 
-```javascript
+```typescript
 import { Reflector } from '@nestjs/core';
 import {
  SetMetadata,
@@ -401,20 +399,21 @@ export const Roles = (...roles: UserRole[]) => SetMetadata(ROLES_KEY, roles);
 
 @Injectable()
 export class RolesGuard implements CanActivate {
- constructor(private reflector: Reflector) {}
+  constructor(private reflector: Reflector) {}
 
- canActivate(context: ExecutionContext): boolean {
-   const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
-     ROLES_KEY,
-     [context.getHandler(), context.getClass()],
-   );
-   if (!requiredRoles) {
-     return true;
-   }
-   const { user }: { user: User } = context.switchToHttp().getRequest();
-   return requiredRoles.some((role) => user.role === role);
- }
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
+      ROLES_KEY,
+      [context.getHandler(), context.getClass()]
+    );
+    if (!requiredRoles) {
+      return true;
+    }
+    const { user }: { user: User } = context.switchToHttp().getRequest();
+    return requiredRoles.some((role) => user.role === role);
+  }
 }
+
 ```
 
 [checkin-api/roles.strategy.ts](https://github.com/toledompm/checkin-api/blob/main/src/auth/strategies/roles.strategy.ts)
