@@ -1,6 +1,6 @@
 # Resumo:
 
-# 1. Introdução:
+# 1 Introdução:
 
 A epidemia do coronavírus nos forçou a se adaptar em vários aspectos, um deles, o trabalho remoto, trouxe um novo modelo de trabalho à tona, o modelo flexível. Ele vem se mostrando como uma opção popular, trazendo o melhor dos dois mundos, no entanto, traz consigo seus próprios desafios. Um deles é a organização de ambientes de trabalho compartilhados, dificultando saber quais estações de trabalho estão sendo ocupadas por quem. Isso levou empresas a desenvolverem suas próprias soluções para esse controle.
 
@@ -36,7 +36,7 @@ O sistema será composto por dois aplicativos para dispositivos móveis que cons
 
 ## 1.2 Conteúdo do trabalho:
 
-# 2. Fundamentação técnica:
+# 2 Fundamentação técnica:
 
 Neste capítulo serão abordadas as tecnologias e padrões utilizados para o desenvolvimento do sistema. Assim como justificações para decisões técnicas.
 
