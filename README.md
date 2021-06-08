@@ -2,7 +2,9 @@
 
 # 1 Introdução:
 
-A epidemia do coronavírus nos forçou a se adaptar em vários aspectos, um deles, o trabalho remoto, trouxe um novo modelo de trabalho à tona, o modelo flexível. Ele vem se mostrando como uma opção popular, trazendo o melhor dos dois mundos, no entanto, traz consigo seus próprios desafios. Um deles é a organização de ambientes de trabalho compartilhados, dificultando saber quais estações de trabalho estão sendo ocupadas por quem. Isso levou empresas a desenvolverem suas próprias soluções para esse controle.
+A epidemia da covid-19 forçou nossa adaptação a várias questões da vida cotidiana. Uma significativa parcela da população brasileira precisou adequar-se às demandas do trabalho, que eram executadas majoritariamente de forma presencial, consolidando a modalidade de trabalho remoto, exigida pela necessidade de afastamento social.
+
+A flexibilidade do lugar de onde e de quando se exercer as tarefas, com a possibilidade de realizá-las no próprio local de trabalho ou outro de livre escolha, tem se mostrado uma opção viável, trazendo o melhor dos dois mundos, o do trabalho convencional e o do teletrabalho. No entanto, traz consigo seus próprios desafios. Um deles é a organização de ambientes de trabalho compartilhados, dificultando saber quais estações de trabalho estão sendo ocupadas e por quem. Isso levou empresas a desenvolverem suas próprias soluções para esse controle.
 
 Pré pandemia, horários rígidos e supervisão a todo momento era a norma para o mercado de trabalho, no entanto, forçadas a mudar, companhias vêm enxergando cada vez mais os benefícios de uma jornada de trabalho flexível.
 
