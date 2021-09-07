@@ -26,11 +26,13 @@ _"...Uma dimensão adicional a ser considerada, é a tendência geral para o tra
 
 Porém, nem todas empresas que estão flexibilizando seus modelos de trabalho, têm a capacidade de desenvolver um sistema de controle, ou mudar para uma suíte de comunicação interna que inclui tal sistema.
 
-A JB3 Investimentos, uma empresa no ramo financeiro de Santa Catarina, é uma dessas empresas, e busca uma solução externa para gerenciar presenças de seus colaboradores.
+A JB3 Investimentos, um escritório de Assessoria de Investimentos de Santa Catarina, é uma dessas empresas e busca uma solução externa para gerenciar presenças de seus colaboradores. A JB3 Investimentos é o potencial cliente do sistema a ser desenvolvido neste trabalho de graduação, que deve corresponder às seguintes necessidades especificadas:
+- Uma forma autenticada de registrar presenças no escritório;
+- Uma forma dos gestores acompanharem o comparecimento dos colaboradores ao escritório.]
 
 ## 1.1 Objetivos do trabalho:
 
-O objetivo geral deste trabalho é disponibilizar um sistema de reserva e checkin para estações de trabalho, acompanhado de uma interface web para gerenciar o sistema, além de extrair os dados de forma inteligivel.
+O objetivo geral deste trabalho é disponibilizar um sistema de check-in para estações de trabalho, acompanhado de uma interface web para gerenciar o sistema e acessar os dados coletados.
 
 O sistema será composto por dois aplicativos para dispositivos móveis que consumirão uma API principal:
 
@@ -40,6 +42,15 @@ O sistema será composto por dois aplicativos para dispositivos móveis que cons
 - **Interface Web**: O site será acessado apenas por usuários permitidos pela organização, com o intuito de gerenciar o sistema.
 
 ## 1.2 Conteúdo do trabalho:
+O presente trabalho está estruturado em seis Capítulos, cujo conteúdo é sucintamente apresentado a seguir:
+
+No Capítulo 2 é feita a fundamentação teórica das tecnologias utilizadas para o desenvolvimento do sistema.
+
+O Capítulo 3 apresenta o desenvolvimento da solução.
+
+No Capítulo 4 são apresentados os resultados.
+
+O Capítulo 5 apresenta as considerações finais deste trabalho a partir da análise dos resultados obtidos.
 
 # 2 Fundamentação técnica:
 
