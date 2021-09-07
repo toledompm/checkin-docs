@@ -26,15 +26,18 @@ _"...Uma dimensão adicional a ser considerada, é a tendência geral para o tra
 
 Porém, nem todas empresas que estão flexibilizando seus modelos de trabalho, têm a capacidade de desenvolver um sistema de controle, ou mudar para uma suíte de comunicação interna que inclui tal sistema.
 
+A JB3 Investimentos, uma empresa no ramo financeiro de Santa Catarina, é uma dessas empresas, e busca uma solução externa para gerenciar presenças de seus colaboradores.
+
 ## 1.1 Objetivos do trabalho:
 
-O objetivo geral deste trabalho é disponibilizar um sistema de reserva e checkin para estações de trabalho, acompanhado de instruções para implantação e conexão com suítes corporativas já existentes.
+O objetivo geral deste trabalho é disponibilizar um sistema de reserva e checkin para estações de trabalho, acompanhado de uma interface web para gerenciar o sistema, além de extrair os dados de forma inteligivel.
 
 O sistema será composto por dois aplicativos para dispositivos móveis que consumirão uma API principal:
 
 - **Aplicativo destinado ao usuário**: O aplicativo será o meio que o funcionário usará para verificar disponibilidades, realizar reservas e gerar um código para checkin.
 - **Aplicativo Totem**: O objetivo deste aplicativo, é ser implantado em dispositivos disponíveis em áreas comuns, como recepções para que os funcionários consigam entrar com seu código temporário e confirmar seu checkin.
 - **API**: A API será responsável por expor rotas que serão consumidas por ambos aplicativos. Todo acesso aos dados será feito por ela, sendo necessário diferentes níveis de permissão para cada funcionalidade.
+- **Interface Web**: O site será acessado apenas por usuários permitidos pela organização, com o intuito de gerenciar o sistema.
 
 ## 1.2 Conteúdo do trabalho:
 
@@ -165,17 +168,31 @@ Controle de acesso baseado em função restringe acesso a certas funcionalidades
 
 sources: https://digitalguardian.com/blog/what-role-based-access-control-rbac-examples-benefits-and-more
 
-### 2.1.5 Jest:
-
-A framework de testes Jest foi utilizada.
-
 ## 2.2 Banco de Dados:
+
+O sistema utilizará um banco de dados para armazenar dados sobre os colaboradores e seus check-ins. O banco será acessado apenas pela API.
 
 ### 2.2.1 Postgres:
 
+O banco escolhido para a aplicação foi PostgresSQL. PostgreSQL é um poderoso sistema de banco de dados relacional, seu código é aberto com mais de 30 anos de desenvolvimento ativo que lhe rendeu uma forte reputação de confiabilidade, robustez de recursos e desempenho.
+
+sources: https://www.postgresql.org/
+
 ### 2.2.2 Orm:
 
+ORM (Object Relational Mapper) é uma técnica que nos permite mapear entidades do banco de dados ao objeto que as representam dentro da aplicação. Ultimamente tem sido muito utilizada e vem crescendo bastante nos últimos anos.
+
 #### 2.2.2.1 TypeOrm:
+
+Typeorm é um ORM escrito para plataformas NodeJS, Browser, Cordova, PhoneGap, Ionic, React Native, NativeScript, Expo, e Electron. Seu objetivo é sempre suportar as mais novas funcionalidades de JavaScript, e providenciar suas próprias melhorias para aplicações que trabalham com banco de dados, desde sistemas com poucas tabelas a aplicações em grande escala que lidam com múltiplos bancos de dados.
+
+### 2.3 Front End Frameworks
+
+Front End Frameworks são projetos feitos para organizar a funcionalidade de diversos aspectos de aplicativos frontend, como websites ou aplicações móveis.
+
+#### 2.3.1 React Native
+
+A framework escolhida para desenvolver os aplicativos móveis foi React Native.
 
 # 3 Desenvolvimento:
 
