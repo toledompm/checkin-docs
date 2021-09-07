@@ -47,33 +47,30 @@ Neste capítulo serão abordadas as tecnologias e padrões utilizados para o des
 
 ## 2.1 API (Application Programming Interface):
 
-API é uma sigla em inglês, significando "Interface de Programação de Aplicativo". É um conjunto de definições e protocolos para construir e integrar aplicações de software.
+API é uma sigla em inglês, que significa "Interface de Programação de Aplicativo". É um conjunto de definições e protocolos para construir e integrar aplicações de software.
 
-Elas surgiram no início da computação, pré-datando por muito tempo computadores pessoais. Na época, APIs eram tipicamente utilizadas como bibliotecas para sistemas operacionais, quase sempre transmitindo mensagens localmente, no mesmo sistema em que estava operando. Aproximadamente 30 anos depois, APIs remotas começaram a se tornar uma importante parte de sistemas de integração de dados.
+APIs surgiram no início da computação, pré-datando por muito tempo computadores pessoais. Na época, eram tipicamente utilizadas como bibliotecas para sistemas operacionais, quase sempre transmitindo mensagens localmente no mesmo sistema em que estava operando. Aproximadamente 30 anos depois, APIs remotas começaram a se tornar uma importante parte de sistemas de integração de dados.
 
-APIs possibilitam a comunicação entre serviços e produtos, sem necessitar que eles conheçam a implementação de cada. Isso simplifica o processo de desenvolvimento, economizando tempo e dinheiro.
+APIs possibilitam a comunicação entre serviços e produtos, sem necessitar que conheçam mutuamente a implementação um do outro. Isso simplifica o processo de desenvolvimento, economizando tempo e dinheiro.
 
-Uma forma de exemplificar APIs, seria tratá-las como contratos, com a documentação agindo como acordos entre as aplicações, detalhando o que é esperado que o consumidor forneça em suas requisições, e como a resposta será estruturada.
+Uma forma de exemplificar APIs é tratá-las como contratos, com a documentação agindo como acordos entre as aplicações, detalhando o que é esperado que o consumidor forneça em suas requisições e como a resposta será estruturada.
 
 ### 2.1.1 REST (Representational State Transfer):
 
-Há muitos protocolos projetados para padronizar APIs, um dos mais famosos, e o que será utilizado no desenvolvimento deste trabalho, é o padrão REST significando "Transferência de Estado Representacional". APIs que aderem ao protocolo REST são denominadas APIs RESTful. Diferente de outros protocolos como SOAP, REST age mais como um estilo de arquitetura. Isso significa que para uma API ser classificada como RESTful, de acordo com a dissertação de Roy Fielding ([Architectural Styles and the Design of Network-based Software Architectures](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm)), basta cumprir as seguintes restrições:
+Há muitos protocolos projetados para padronizar APIs, um dos mais conhecidos, e que será utilizado no desenvolvimento deste trabalho, é o padrão REST, que significa "Transferência de Estado Representacional". APIs que aderem ao protocolo REST são denominadas APIs RESTful. Diferente de outros como SOAP, o protocolo REST age mais como um estilo de arquitetura. Isso significa que para uma API ser classificada como RESTful, de acordo com a dissertação de Roy Fielding ([Architectural Styles and the Design of Network-based Software Architectures](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm)), deve cumprir as seguintes restrições:
 
 - **Interface uniforme**: Esta é a restrição mais importante a se seguir quando projetando uma API RESTful. Para cumpri-la, é preciso:
-
-- Identificar recursos durante requisições;
-- Permitir a manipulação de recursos, através de suas representações;
-- Enviar mensagens auto-descritivas;
+  - Identificar recursos durante requisições;
+  - Permitir a manipulação de recursos, por meio de suas representações;
+  - Enviar mensagens auto-descritivas;
 
 - **Arquitetura cliente-servidor**: A arquitetura é composta por clientes, servidores e recursos. Requisições são feitas utilizando o protocolo http.
 
-- **Statelessness**: Nenhuma informação do cliente é armazenada no servidor. A responsabilidade de armazenar dados sobre o estado da sessão caem sobre o cliente.
+- **Statelessness**: Nenhuma informação do cliente é armazenada no servidor. A responsabilidade de armazenar dados sobre o estado da sessão é do cliente.
 
-- **Cacheabilidade**: Armazenar respostas para requisições comuns, pode eliminar algumas interações entre as camadas.
+- **Cacheability**: A API deve armazenar respostas para requisições comuns, para eliminar algumas interações entre as camadas.
 
-- **Sistema em camadas**: Mediar interações entre o cliente e servidor com camadas adicionais, como caches compartilhados, load balancers etc.
-
-- **Código sobre demanda (opcional)**: Servidores podem explorar alguma funcionalidade do cliente, exportando código a ser executado.
+- **Sistema em camadas**: As interações entre o cliente e servidor devem ser mediadas com camadas adicionais, como caches compartilhados, load balancers etc.
 
 ### 2.1.2 OpenAPI:
 
@@ -85,26 +82,26 @@ sources: https://www.redhat.com/en/topics/api/what-are-application-programming-i
 
 A stack escolhida para o desenvolvimento da API foi Typescript + Node.js.
 
-Node.js é uma das ferramenta mais utilizada para desenvolvimento:
+Node.js é uma das ferramentas mais utilizadas para desenvolvimento, como demonstrado:
 
 ![graph](images/graph-2.png)
 
 [Most used libraries, frameworks, and tools among developers, worldwide, as of early 2020](https://www.statista.com/statistics/793840/worldwide-developer-survey-most-used-frameworks)
 
-Devido a sua popularidade, muitos problemas que são normalmente encontrados durante o desenvolvimento de uma API, já foram solucionados pela comunidade. Isso torna a implementação do projeto, algo mais simples, além de contribuir com sua qualidade.
+Devido a popularidade do Node.js, muitos problemas que são normalmente encontrados durante o desenvolvimento de uma API já foram solucionados por sua comunidade. Isso torna a implementação do projeto mais simples, além de contribuir com sua qualidade.
 
-A linguagem typescript foi escolhida como a linguagem principal do projeto pelas suas vantagens quando comparado com javascript tradicional:
+A linguagem typescript foi escolhida como a linguagem principal do projeto pelas suas vantagens quando comparada à javascript tradicional, pois contém:
 
 - Orientação a Objetos: Conceitos como classes, interfaces e herança são suportados por typescript, tornando o código mais organizado.
-- Legibilidade: Tipagem explicita torna o código mais auto-explicativo. Possibilitando muitas vezes entendê-lo olhando apenas para as assinaturas das funções e atributos dos objetos.
+- Legibilidade: Tipagem explícita torna o código mais auto-explicativo, possibilitando muitas vezes entendê-lo olhando apenas para as assinaturas das funções e atributos dos objetos.
 - Debugging: De acordo com o estudo [To Type or Not to Type:
   Quantifying Detectable Bugs in JavaScript](https://earlbarr.com/publications/typestudy.pdf), typescript consegue detectar 15% dos bugs mais comuns de javascript, durante a fase de transpilação.
 
-Embora isso resulte em um código mais verboso, devido ao tamanho do projeto, as vantagens na organização e legibilidade se tornaram mais importantes.
+Embora isso resulte em um código mais verboso, devido ao tamanho do projeto, as vantagens na organização e legibilidade justificam a adoção dessa linguagem.
 
 #### 2.1.3.1 Node.js:
 
-NodeJS é um ambiente de execução JavaScript baseado em eventos assíncronos, o Node.js foi projetado para construir aplicativos de rede escalonáveis.
+NodeJS é um ambiente de execução JavaScript baseado em eventos assíncronos. Foi projetado para construir aplicativos de rede escalonáveis.
 
 Isso vai contra os modelos de simultaneidade mais comuns de hoje, que utilizam threads de Sistemas Operacionais. Redes baseadas em threads são relativamente ineficientes e muito difíceis de utilizar. Além disso, os usuários do Node.js não precisam se preocupar com deadlocks, já que não há bloqueio de recursos. Quase nenhuma função no Node.js realiza I/O diretamente, portanto, o processo nunca é bloqueado. Como nada bloqueia, sistemas escaláveis ​​são muito razoáveis ​​para desenvolver em Node.js.
 
@@ -128,9 +125,9 @@ Para escolher a estratégia de autenticação da API, foram definidos os seguint
 
 - O escopo de uma sessão abrange apenas a requisição que a criou;
 - A API será responsável por gerar e validar certificados de autenticação;
-- Usuários deverão provar sua identidade para receber um certificado;
+- Usuários deverão provar sua identidade para receber um certificado.
 
-Levando estes três requisitos em conta, foram escolhidas uma combinação de estratégias. Os dois primeiros requisitos são satisfeitos pela estratégia `JWT`. O último requisito, trata com dados sensíveis como senhas, por isso foi escolhido uma estratégia mais segura, OAuth2 gerenciado por um provedor terceirizado. Com essa combinação, foi possível garantir um nível elevado de segurança, sem adicionar muita complexidade à aplicação, já que a estratégia de autenticação mais complicada foi delegada e a facilidade de integrar estratégias variadas na framework NestJS.
+Levando estes três requisitos em conta, foram escolhidas uma combinação de estratégias. Os dois primeiros requisitos são satisfeitos pela estratégia `JWT`. O último requisito, trata de dados sensíveis como senhas, por isso foi escolhido uma estratégia mais segura, OAuth2 gerenciado por um provedor terceirizado. Com essa combinação, foi possível garantir um nível elevado de segurança, sem adicionar muita complexidade à aplicação, já que a estratégia de autenticação mais complicada foi delegada e conta com a facilidade de integrar estratégias variadas na framework NestJS.
 
 #### 2.3.1 JWT (JSON Web Token):
 
@@ -146,19 +143,19 @@ sources: https://github.com/nestjs/jwt
 
 ##### 2.3.1.2 passport-jwt:
 
-A biblioteca `passport-jwt` fornece uma estratégia de autenticação de endpoints, utilizando JSON Web Tokens, seu uso é destinado para proteger APIs RESTful sem o uso de sessões.
+A biblioteca `passport-jwt` fornece uma estratégia de autenticação de endpoints, utilizando JSON Web Tokens. Seu uso é destinado para proteger APIs RESTful sem o uso de sessões.
 
 sources: http://www.passportjs.org/packages/passport-jwt/
 
 #### 2.3.2 OAuth 2.0:
 
-A autorização gerada pela framework OAuth 2.0 permite que um aplicativo de terceiros obtenha acesso limitado a um serviço HTTP, seja em nome de um proprietário de recurso orquestrando uma interação de aprovação entre o proprietário do recurso e o serviço HTTP ou permitindo que o aplicativo de terceiros obter acesso em seu próprio nome.
+A autorização gerada pela framework OAuth 2.0 permite que um aplicativo de terceiros obtenha acesso limitado a um serviço HTTP, seja em nome de um proprietário de recurso, orquestrando uma interação de aprovação entre o proprietário do recurso e o serviço HTTP, ou permitindo que o aplicativo de terceiros obtenha acesso em seu próprio nome.
 
 sources: https://datatracker.ietf.org/doc/html/rfc6749
 
 ##### 2.3.2.1 OAuth2 via Google API:
 
-O provedor inicial para autenticação OAuth2 escolhido foi a Google, devido a sua presença prevalente no setor corporativo e fácil integração.
+O provedor inicial para autenticação OAuth2 escolhido foi a Google, devido a sua presença prevalente no setor corporativo e sua fácil integração.
 
 sources: https://developers.google.com/identity/protocols/oauth2
 
@@ -174,17 +171,17 @@ O sistema utilizará um banco de dados para armazenar dados sobre os colaborador
 
 ### 2.2.1 Postgres:
 
-O banco escolhido para a aplicação foi PostgresSQL. PostgreSQL é um poderoso sistema de banco de dados relacional, seu código é aberto com mais de 30 anos de desenvolvimento ativo que lhe rendeu uma forte reputação de confiabilidade, robustez de recursos e desempenho.
+O banco escolhido para a aplicação foi PostgresSQL, que é um poderoso sistema de banco de dados relacional. Seu código é aberto com mais de 30 anos de desenvolvimento ativo, que lhe renderam uma forte reputação de confiabilidade, robustez de recursos e desempenho.
 
 sources: https://www.postgresql.org/
 
 ### 2.2.2 Orm:
 
-ORM (Object Relational Mapper) é uma técnica que nos permite mapear entidades do banco de dados ao objeto que as representam dentro da aplicação. Ultimamente tem sido muito utilizada e vem crescendo bastante nos últimos anos.
+ORM (Object Relational Mapper) é uma técnica que permite mapear entidades do banco de dados ao objeto que as representa dentro da aplicação. Ultimamente tem sido muito utilizada.
 
 #### 2.2.2.1 TypeOrm:
 
-Typeorm é um ORM escrito para plataformas NodeJS, Browser, Cordova, PhoneGap, Ionic, React Native, NativeScript, Expo, e Electron. Seu objetivo é sempre suportar as mais novas funcionalidades de JavaScript, e providenciar suas próprias melhorias para aplicações que trabalham com banco de dados, desde sistemas com poucas tabelas a aplicações em grande escala que lidam com múltiplos bancos de dados.
+Typeorm é um ORM escrito para plataformas NodeJS, Browser, Cordova, PhoneGap, Ionic, React Native, NativeScript, Expo, e Electron. Seu objetivo é sempre suportar as mais novas funcionalidades de JavaScript e providenciar suas próprias melhorias para aplicações que trabalham com banco de dados, desde sistemas com poucas tabelas até aplicações em grande escala que lidam com múltiplos bancos de dados.
 
 ### 2.3 Front End Frameworks
 
