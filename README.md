@@ -214,7 +214,7 @@ Assim como a arquitetura do Angular, a NestJS nos dá acesso a módulos. Cada m�
 
 Dependências entre módulos são resolvidas através de injeção de dependência. O módulo dependente, deve importar o módulo provedor, e injetar o componente que necessita. As dependências do componente importado serão resolvidas pelo módulo provedor.
 
-## 3.2 Módulo App:
+### 3.1.2 Módulo App:
 
 O módulo APP tem a responsabilidade de importar todos outros módulos.
 
@@ -244,7 +244,7 @@ bootstrap();
 
 [checkin-api/main.ts](https://github.com/toledompm/checkin-api/blob/main/src/main.ts)
 
-## 3.3 Módulo Auth:
+### 3.1.3 Módulo Auth:
 
 O módulo `AuthModule`, tem a responsabilidade de definir as estratégias de autenticação da aplicação, além de expor rotas para emitir tokens de acesso.
 
@@ -259,7 +259,7 @@ export class AuthModule {}
 
 [checkin-api/auth.module.ts](https://github.com/toledompm/checkin-api/blob/main/src/auth/auth.module.ts)
 
-### 3.3.1 Controller:
+#### 3.1.3.1 Controller:
 
 O controller expõe duas rotas, `google/login` e `google/redirect`.
 
@@ -294,7 +294,7 @@ export class AuthController {
 
 [checkin-api/auth.controller.ts](https://github.com/toledompm/checkin-api/blob/main/src/auth/auth.controller.ts)
 
-### 3.3.2 AuthService:
+#### 3.1.3.1.2 AuthService:
 
 O serviço providenciado por este módulo tem duas funções.
 
@@ -310,11 +310,11 @@ export interface AuthService {
 
 [checkin-api/auth.service.ts](https://github.com/toledompm/checkin-api/blob/main/src/auth/auth.service.ts)
 
-### 3.3.3 Estratégias de Autenticação:
+#### 3.1.3.3 Estratégias de Autenticação:
 
 O módulo `AuthModule` também é responsável por implementar todas estratégias de autenticação utilizadas pela aplicação. Como as estratégias extendem a classe abstrata `PassportStrategy` providenciada pela framework NestJS, não foi preciso importá-las individualmente, já que, após registradas no módulo `AuthModule`, a framework as disponibiliza através da função `AuthGuard`.
 
-#### 3.3.3.1 Estratégia OAuth 2.0:
+##### 3.1.3.3.1 Estratégia OAuth 2.0:
 
 A classe `GoogleStrategy` herda os atributos da classe `PassportStrategy`, passando as configurações importadas da biblioteca `passport-google-oauth20`. Com isso, a maior parte da comunicação e redirecionamento já está pronta, basta implementar a função abstrata `validate`.
 
@@ -366,7 +366,7 @@ export class GoogleStrategy extends PassportStrategy(
 
 [checkin-api/google.strategy.ts](https://github.com/toledompm/checkin-api/blob/main/src/auth/strategies/google.strategy.ts)
 
-#### 3.3.3.2 Estratégia JWT:
+##### 3.1.3.3.2 Estratégia JWT:
 
 Assim como a estratégia anterior, cabe à classe `JwtStrategy` configurar a classe pai com a estratégia fornecida pela biblioteca `passport-jwt`, e implementar a função abstrata `validate`.
 
@@ -404,7 +404,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, JWT_AUTH_STRATEGY) {
 
 [checkin-api/jwt.strategy.ts](https://github.com/toledompm/checkin-api/blob/main/src/auth/strategies/jwt.strategy.ts)
 
-#### 3.3.3.3 Estratégia Role Based Access Control:
+##### 3.1.3.3.3 Estratégia Role Based Access Control:
 
 A estratégia RBAC, diferente das anteriores, é implementada sem o auxílio da classe abstrata `PassportStrategy`. Esta estratégia é utilizada em conjunto com a estratégia JWT para rotas específicas que podem ser acessadas apenas por um determinado grupo de usuários.
 
@@ -444,3 +444,93 @@ export class RolesGuard implements CanActivate {
 ```
 
 [checkin-api/roles.strategy.ts](https://github.com/toledompm/checkin-api/blob/main/src/auth/strategies/roles.strategy.ts)
+
+### 3.1.4 Módulo Cache:
+
+O módulo cache é responsável por empacotar as funcionalidades do cache que será utilizado pela API.
+
+```typescript
+@Module({
+  imports: [cacheModule],
+  providers: [serviceProvider],
+  exports: [serviceProvider],
+})
+export class CacheProviderModule {}
+```
+
+[checkin-api/auth.module.ts](https://github.com/toledompm/checkin-api/blob/src/cache/cache.module.ts)
+
+#### 3.1.4.1 CacheService:
+
+O serviço provisionado por este módulo tem as seguintes funções:
+- Salvar registros no cache;
+- Excluir registros do cache;
+- Buscar registros no cache.
+
+```typescript
+export interface CacheService {
+  store(record: CacheRecord): Promise<void>;
+  delete(key: string): Promise<void>;
+  find(key: string): Promise<CacheRecord>;
+}
+```
+
+[checkin-api/cache.service.ts](https://github.com/toledompm/checkin-api/blob/main/src/cache/cache.service.ts)
+
+### 3.1.5 Módulo User:
+
+O módulo user é responsável por abstrair e gerenciar os usuários da aplicação, de todos níveis de acesso.
+
+```typescript
+@Module({
+  imports: [TypeOrmModule.forFeature([User]), CacheProviderModule],
+  controllers: [UserController],
+  providers: [userProvider],
+  exports: [userProvider],
+})
+export class UserModule {}
+```
+
+[checkin-api/user.module.ts](https://github.com/toledompm/checkin-api/blob/src/user/user.module.ts)
+
+#### 3.1.5.1 Controller:
+
+O controller expõe 2 métodos na rota `/user`, `GET` e `POST`.
+
+```typescript
+@Controller('user')
+@UseGuards(AuthGuard(JWT_AUTH_STRATEGY))
+export class UserController {
+  constructor(
+    @Inject(USER_SERVICE) private readonly userService: UserService,
+  ) {}
+
+  /**
+   * Rota utilizada para gerar o token de acesso do usuário.
+  */
+  @Get()
+  public async checkinToken(
+    @Req() { user }: { user: User },
+  ): Promise<UserCheckinDto> {
+    // Valida o usuário autenticado
+    assert.ok(user, 'User not found');
+
+    // Retorna o token temporário gerado
+    return this.userService.generateCheckinToken(user);
+  }
+
+  /**
+   * Rota utilizada para criar novos usuários.
+   * Apenas usuários com a Role: ADMIM tem permissão para acessala
+  */
+  @Post()
+  @Roles(UserRole.ADMIN)
+  public async createUser(@Body() newUserDto: UserDto): Promise<User> {
+    return this.userService.saveUser(newUserDto);
+  }
+}
+```
+
+[checkin-api/user.controller.ts](https://github.com/toledompm/checkin-api/blob/src/user/user.controller.ts)
+
+#### 3.1.5.2 UserService:
