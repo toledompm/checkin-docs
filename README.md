@@ -27,6 +27,7 @@ _"...Uma dimensão adicional a ser considerada, é a tendência geral para o tra
 Porém, nem todas empresas que estão flexibilizando seus modelos de trabalho, têm a capacidade de desenvolver um sistema de controle, ou mudar para uma suíte de comunicação interna que inclui tal sistema.
 
 A JB3 Investimentos, um escritório de Assessoria de Investimentos de Santa Catarina, é uma dessas empresas e busca uma solução externa para gerenciar presenças de seus colaboradores. A JB3 Investimentos é o potencial cliente do sistema a ser desenvolvido neste trabalho de graduação, que deve corresponder às seguintes necessidades especificadas:
+
 - Uma forma autenticada de registrar presenças no escritório;
 - Uma forma dos gestores acompanharem o comparecimento dos colaboradores ao escritório.]
 
@@ -42,6 +43,7 @@ O sistema será composto por dois aplicativos para dispositivos móveis que cons
 - **Interface Web**: O site será acessado apenas por usuários permitidos pela organização, com o intuito de gerenciar o sistema.
 
 ## 1.2 Conteúdo do trabalho:
+
 O presente trabalho está estruturado em seis Capítulos, cujo conteúdo é sucintamente apresentado a seguir:
 
 No Capítulo 2 é feita a fundamentação teórica das tecnologias utilizadas para o desenvolvimento do sistema.
@@ -71,6 +73,7 @@ Uma forma de exemplificar APIs é tratá-las como contratos, com a documentaçã
 Há muitos protocolos projetados para padronizar APIs, um dos mais conhecidos, e que será utilizado no desenvolvimento deste trabalho, é o padrão REST, que significa "Transferência de Estado Representacional". APIs que aderem ao protocolo REST são denominadas APIs RESTful. Diferente de outros como SOAP, o protocolo REST age mais como um estilo de arquitetura. Isso significa que para uma API ser classificada como RESTful, de acordo com a dissertação de Roy Fielding ([Architectural Styles and the Design of Network-based Software Architectures](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm)), deve cumprir as seguintes restrições:
 
 - **Interface uniforme**: Esta é a restrição mais importante a se seguir quando projetando uma API RESTful. Para cumpri-la, é preciso:
+
   - Identificar recursos durante requisições;
   - Permitir a manipulação de recursos, por meio de suas representações;
   - Enviar mensagens auto-descritivas;
@@ -463,6 +466,7 @@ export class CacheProviderModule {}
 #### 3.1.4.1 CacheService:
 
 O serviço provisionado por este módulo tem as seguintes funções:
+
 - Salvar registros no cache;
 - Excluir registros do cache;
 - Buscar registros no cache.
@@ -498,22 +502,22 @@ export class UserModule {}
 O controller expõe 2 métodos na rota `/user`, `GET` e `POST`.
 
 ```typescript
-@Controller('user')
+@Controller("user")
 @UseGuards(AuthGuard(JWT_AUTH_STRATEGY))
 export class UserController {
   constructor(
-    @Inject(USER_SERVICE) private readonly userService: UserService,
+    @Inject(USER_SERVICE) private readonly userService: UserService
   ) {}
 
   /**
    * Rota utilizada para gerar o token de acesso do usuário.
-  */
+   */
   @Get()
   public async checkinToken(
-    @Req() { user }: { user: User },
+    @Req() { user }: { user: User }
   ): Promise<UserCheckinDto> {
     // Valida o usuário autenticado
-    assert.ok(user, 'User not found');
+    assert.ok(user, "User not found");
 
     // Retorna o token temporário gerado
     return this.userService.generateCheckinToken(user);
@@ -522,7 +526,7 @@ export class UserController {
   /**
    * Rota utilizada para criar novos usuários.
    * Apenas usuários com a Role: ADMIM tem permissão para acessala
-  */
+   */
   @Post()
   @Roles(UserRole.ADMIN)
   public async createUser(@Body() newUserDto: UserDto): Promise<User> {
@@ -534,3 +538,179 @@ export class UserController {
 [checkin-api/user.controller.ts](https://github.com/toledompm/checkin-api/blob/src/user/user.controller.ts)
 
 #### 3.1.5.2 UserService:
+
+Este serviço tem duas responsabilidades:
+
+- Gerenciar usuários
+- Gerenciar tokens de usuários
+
+```typescript
+export interface UserService {
+  saveUser(userDto: UserDto): Promise<User>;
+  getUser(id: number): Promise<User>;
+  findUser(filter: UserFilter): Promise<User | undefined>;
+  generateCheckinToken(user: User): Promise<UserCheckinDto>;
+  refreshCheckinToken(token: UserCheckinDto): Promise<void>;
+}
+```
+
+[checkin-api/user.service.ts](https://github.com/toledompm/checkin-api/blob/src/user/user.service.ts)
+
+#### 3.1.5.3 Geração de tokens de checkin:
+
+Novamente visando segurança, o token de checkin é criado de forma aleatória, usando o algoritmo UUIDv4. Este token não tem significado algum fora da aplicação, ele é utilizado como chave temporária armazenada no Cache, indicando a qual usuário este token pertence. Após ser utilizado, ou seu tempo de vida é esgotado, o token é removido do cache, deixando de funcionar.
+
+```typescript
+export class UserServiceImpl implements UserService {
+  /** ... */
+
+  public async generateCheckinToken(user: User): Promise<UserCheckinDto> {
+    /**
+     * Gerando a chave aleatória
+     */
+    const key = uuidv4();
+
+    /**
+     * Salvando atributos do usuário no cache, usando a chave aleatória como
+     * identificador
+     */
+    const attributes = UserCheckinDto.extractUserTokenAttributes(user);
+    await this.cacheService.store({ key, value: attributes });
+
+    /**
+     * Retornando a chave aleatória
+     */
+    return new UserCheckinDto({ refreshToken: key });
+  }
+
+  public async refreshCheckinToken({
+    refreshToken,
+  }: UserCheckinDto): Promise<void> {
+    /**
+     * Removendo a chave e atributos do cache
+     */
+    await this.cacheService.delete(refreshToken);
+  }
+}
+```
+
+[checkin-api/user.service.impl.ts](https://github.com/toledompm/checkin-api/blob/src/user/user.service.impl.ts)
+
+### 3.1.6 Módulo Checkin:
+
+O módulo `CheckinModule` concentra toda lógica necessária para realizar o check-in de usuários.
+
+```typescript
+@Module({
+  imports: [
+    UserModule,
+    CacheProviderModule,
+    TypeOrmModule.forFeature([CheckIn]),
+  ],
+  providers: [checkinServiceProvider],
+  controllers: [CheckinController],
+})
+export class CheckinModule {}
+```
+
+[checkin-api/checkin.module.ts](https://github.com/toledompm/checkin-api/blob/main/src/checkin/checkin.module.ts)
+
+#### 3.1.6.1 Controller:
+
+```typescript
+@Controller("checkin")
+@UseGuards(AuthGuard(JWT_AUTH_STRATEGY))
+export class CheckinController {
+  constructor(
+    @Inject(CHECKIN_SERVICE) private readonly checkinService: CheckinService
+  ) {}
+
+  @Post()
+  /**
+   * Apenas usuários com a role TOTEM podem realizar checkin
+   */
+  @Roles(UserRole.TOTEM)
+  checkin(@Body() userCheckinDto: UserCheckinDto): Promise<void> {
+    /**
+     * Após a role do usuário ser validada, o checkinDTO presente na mensagem
+     * é direcionada ao serviço de checkin.
+     */
+    return this.checkinService.checkinUser(userCheckinDto);
+  }
+}
+```
+
+[checkin-api/checkin.controller.ts](https://github.com/toledompm/checkin-api/blob/main/src/checkin/checkin.controller.ts)
+
+#### 3.1.6.2 CheckinService:
+
+O serviço `CheckinService` tem apenas uma responsabilidade, validar os dados enviados por usuários Totem, salvando registros válidos, e retornando erros para requisições inválidas.
+
+```typescript
+export interface CheckinService {
+  checkinUser(checkinDto: UserCheckinDto): Promise<void>;
+}
+```
+
+[checkin-api/checkin.service.ts](https://github.com/toledompm/checkin-api/blob/main/src/checkin/checkin.service.ts)
+
+#### 3.1.6.3 CheckinService, implementação:
+
+Para validar o objeto de checkin, o serviço verifica se a chave enviada está presente no cache, tratando ambas possibilidades.
+
+```typescript
+export class CheckinServiceImpl implements CheckinService {
+  constructor(
+    @InjectRepository(CheckIn)
+    private readonly checkinRepository: Repository<CheckIn>,
+    @Inject(USER_SERVICE)
+    private readonly userService: UserService,
+    @Inject(CACHE_SERVICE)
+    private readonly cacheService: CacheService
+  ) {}
+
+  public async checkinUser(checkinDto: UserCheckinDto): Promise<void> {
+    /**
+     * Buscando chave no cache
+     */
+    const cacheRecord = await this.cacheService.find(checkinDto.refreshToken);
+
+    /**
+     * Validando o valor retornado
+     * Se for válido, nada acontece
+     * Se for inválido, um erro é jogado e a execução interrompida
+     */
+    assert.ok(cacheRecord, "Invalid refresh token!");
+
+    /**
+     * Após validado, os atributos do usuário são extraídos do registro do cache.
+     * Estes atributos são utilizados para buscar o usuário no banco da aplicação.
+     */
+    const {
+      value: { uuid },
+    } = cacheRecord;
+    const user = await this.userService.findUser({ uuid });
+
+    /**
+     * O usuário encontrado tem seu checkin registrado no banco, e seu token de checkin renovado
+     */
+    await this.userService.refreshCheckinToken(checkinDto);
+    await this.checkinRepository.save({ user });
+  }
+}
+```
+
+[checkin-api/checkin.service.ts](https://github.com/toledompm/checkin-api/blob/main/src/checkin/checkin.service.ts)
+
+## 3.2 Aplicativos móveis:
+Os aplicativos móveis foram construídos utilizando a framework React Native. Eles compartilham boa parte de suas bases de códigos, se diferenciando apenas na tela principal.
+
+### 3.2.1 Tela de Login:
+
+### 3.2.2 Tela de Opções:
+
+### 3.2.3 Tela principal (Totem):
+
+### 3.2.4 Tela principal (Usuário):
+
+### 3.2.5 Comunicação com a API:
