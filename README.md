@@ -703,14 +703,99 @@ export class CheckinServiceImpl implements CheckinService {
 [checkin-api/checkin.service.ts](https://github.com/toledompm/checkin-api/blob/main/src/checkin/checkin.service.ts)
 
 ## 3.2 Aplicativos móveis:
+
 Os aplicativos móveis foram construídos utilizando a framework React Native. Eles compartilham boa parte de suas bases de códigos, se diferenciando apenas na tela principal.
 
 ### 3.2.1 Tela de Login:
 
+![login](images/login-screen.png)
+
+A tela de login é composta por três componentes principais:
+
+- Botão "GET USER TOKEN": O botão redireciona o usuário para o login via Google, disponibilizado pela API.
+- Input "Token": Campo a ser preenchido com o token retornado pela API.
+- Botão "LOGIN": Botão que salva o token inserido na sessão atual, renderizando a tela principal.
+
 ### 3.2.2 Tela de Opções:
+
+![settings](images/settings-screen.png)
+
+A tela de opções contém apenas um componente:
+
+- Botão "LOGOUT": Este botão limpa o token de login salvo na sessão, renderizando a tela de login novamente.
 
 ### 3.2.3 Tela principal (Totem):
 
 ### 3.2.4 Tela principal (Usuário):
 
+![user-main](images/user-main-screen.png)
+
+A tela principal do usuário contém dois componentes:
+
+- Código QR: Este código contém a chave de checkin gerado pela API.
+- Botão "CHECK-IN": Este botão envia um chamado a API, requisitando uma nova chave de check-in, atualizando o código QR.
+
 ### 3.2.5 Comunicação com a API:
+
+A comunicação com a API foi feita utilizando a biblioteca Axios. Os métodos criados para enviar as requisições de check-in e de geração de token foram os seguintes:
+
+```typescript
+type CheckinTokenResponse = {
+  refreshToken: string;
+};
+
+function createApiInstance(url: string, authToken: string) {
+  return axios.create({
+    baseURL: url,
+    timeout: 1000,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+}
+
+export async function getCheckinToken(
+  url: string,
+  authToken: string
+): Promise<AxiosResponse<CheckinTokenResponse>> {
+  const apiInstance = createApiInstance(url, authToken);
+  /**
+   * A chamada a API é feita utilizando o método `get`
+   * O usuário é identificado através do token de autenticação
+   */
+  return apiInstance.get<CheckinTokenResponse>("/user");
+}
+
+export async function checkin(
+  userCheckinToken: string,
+  url: string,
+  authToken: string
+): Promise<AxiosResponse<any>> {
+  const apiInstance = createApiInstance(url, authToken);
+  /**
+   * A chamada a API é feita utilizando o método `post`
+   * O usuário é identificado através do body da requisição
+   * O usuário token é identificado através do token de autenticação
+   */
+  return apiInstance.post("/checkin", { refreshToken: userCheckinToken });
+}
+```
+
+# 4 Resultados:
+
+Neste capítulo serão apresentados os resultados do desenvolvimento do sistema de checkin. Suas funcionalidades e como seus dados podem ser analisados.
+
+## 4.1 Fluxo de checkin:
+
+## 4.2 Analisando dados registrados:
+
+## 4.3 Cadastrando colaboradores e totems:
+
+## 4.4 Revisão do cliente:
+
+# 5 Considerações Finais:
+
+## Aprendizado:
+
+## Aplicações no mundo real:
