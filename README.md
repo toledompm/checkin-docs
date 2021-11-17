@@ -788,14 +788,33 @@ Neste capítulo serão apresentados os resultados do desenvolvimento do sistema 
 
 ## 4.1 Fluxo de checkin:
 
-## 4.2 Analisando dados registrados:
+O fluxo de checkin requer dois simples passos do usuário:
 
-## 4.3 Cadastrando colaboradores e totems:
+- Abrir aplicativo móvel, logado em sua conta registrada no sistema;
+- Scannear o código QR gerado pelo aplicativo, em uma das estações TOTEMS.
+
+Isso irá inserir um registro na base de dados, contendo o usuário, horário e em qual totem o check-in foi efetuado. Esta base de dados pode ser utilizada pelos administradores do sistema para gerar relatórios, e acompanhar as visitas ao escritório de seus colaboradores.
+
+## 4.2 Analisando dados de checkin:
+
+Admnistradores do sistema com acesso a base de dados conseguem gerar dashboards e relatórios contendo informações importantes sobre o comparecimento presencial dos colaboradores de uma organização. Alguns exemplos foram fornecidos.
+
+### 4.2.1 Porcentagem de presença por colaborador:
+
+### 4.2.2 Colaboradores presentes por dia:
+
+## 4.3 Cadastrando colaboradores e totens:
+
+O cadastro pode ser feito através de inserções diretas na base de dados do sistema. Para isto foi fornecido um script, além de uma planilha a ser preenchida com os dados dos novos totens e colaboradores a serem inseridos.
 
 ## 4.4 Revisão do cliente:
 
 # 5 Considerações Finais:
 
-## Aprendizado:
+Neste capítulo serão apresentadas as considerações finais do projeto. Nela serão apresentados os aprendizados deste estudo, além de suas aplicabilidades no mundo real.
+
+## 5.1 Aprendizado:
+
+Muito tempo foi gasto buscando soluções sofisticadas para problemas não existentes. A falta de acompanhamento continuo, gerou uma divergencia entre o produto imaginado e o desenvolvido. Coleta de requisitos, e uma estratégia de desenvolvimento ágil são cruciais para indústria de software.
 
 ## Aplicações no mundo real:
