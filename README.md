@@ -791,7 +791,7 @@ Neste capítulo serão apresentados os resultados do desenvolvimento do sistema 
 O fluxo de checkin requer dois simples passos do usuário:
 
 - Abrir aplicativo móvel, logado em sua conta registrada no sistema;
-- Scannear o código QR gerado pelo aplicativo, em uma das estações TOTEMS.
+- Scannear o código QR gerado pelo aplicativo, em uma das estações TOTENS.
 
 Isso irá inserir um registro na base de dados, contendo o usuário, horário e em qual totem o check-in foi efetuado. Esta base de dados pode ser utilizada pelos administradores do sistema para gerar relatórios, e acompanhar as visitas ao escritório de seus colaboradores.
 
@@ -815,6 +815,10 @@ Neste capítulo serão apresentadas as considerações finais do projeto. Nela s
 
 ## 5.1 Aprendizado:
 
+### 5.1.1 Metodologias ágeis:
+
 Muito tempo foi gasto buscando soluções sofisticadas para problemas não existentes. A falta de acompanhamento continuo, gerou uma divergencia entre o produto imaginado e o desenvolvido. Coleta de requisitos, e uma estratégia de desenvolvimento ágil são cruciais para indústria de software.
 
-## Aplicações no mundo real:
+## 5.2 Aplicações no mundo real:
+
+O sistema desenvolvido pode ser fácilmente implantado, necessitando apenas de dispositivos móveis com camêras para os aplicativos totens. Seu impacto no dia a dia dos colaboradores é muito pequeno e o valor dos dados coletados é de grande importância para organizações adotando jornadas de trabalho híbridas.
