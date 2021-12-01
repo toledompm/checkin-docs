@@ -809,9 +809,85 @@ Isso irá inserir um registro na base de dados, contendo o usuário, horário e 
 
 Admnistradores do sistema com acesso a base de dados conseguem gerar dashboards e relatórios contendo informações importantes sobre o comparecimento presencial dos colaboradores de uma organização. Alguns exemplos foram fornecidos.
 
+A base de dados do sistema foi preenchida com dados falsos para simular o uso do sistema por um tempo prolongado.
+
+O primeiro passo das análises a seguir foi carregar os dados de checkins, reservas e usuários.
+
+``` python
+checkins = pd.read_sql_query(
+    '''SELECT * FROM checkins;''',
+    connection,
+)
+
+reservations = pd.read_sql_query(
+    '''SELECT * FROM reservations;''',
+    connection,
+)
+
+users = pd.read_sql_query(
+    '''SELECT * FROM users WHERE role = 'user' ;''',
+    connection,
+)
+```
+
+Em seguida foi gerado um dataframe unindo os dados de checkin e reserva, apontando qual checkin foi resultado de uma reserva:
+
+```python
+reservations_x_checkin = pd.merge(
+    reservations,
+    checkins,
+    how='inner',
+    left_on=['user_id', 'reservation_date'],
+    right_on=['user_id', 'checkin_date'],
+)
+```
+
 ### 4.2.1 Porcentagem de presença por colaborador:
 
+Esta análise compara o número de reservas feitas, com o número de checkins relacionados a reservas:
+
+```python
+def get_frequency(user):
+    reservations_made = reservations['user_id'][reservations['user_id'] == user.id].count(
+    )
+    reservations_with_checkins = reservations_x_checkin['user_id'][reservations_x_checkin['user_id'] == user.id].count(
+    )
+
+    return round((reservations_with_checkins / reservations_made) * 100, 2)
+
+
+users['frequency'] = users.apply(lambda row: get_frequency(row), axis=1)
+```
+
+![frequency](images/frequency.png)
+
 ### 4.2.2 Colaboradores presentes por dia:
+
+Esta análise busca os colaboradores que realizaram checkins durante os dias especificados:
+
+```python
+def get_users_present_by_day(checkin_date):
+    return checkins[checkins['checkin_date'] == checkin_date]['user_id'].tolist()
+
+results = {}
+DATES_TO_CHECK = [
+    date(2021, 7, 18),
+    date(2021, 2, 12),
+    date(2021, 9, 1),
+    date(2021, 9, 20),
+]
+
+for date in DATES_TO_CHECK:
+    user_ids = get_users_present_by_day(date)
+    user_info = users[users['id'].isin(
+        user_ids)][['first_name', 'last_name', 'email']].values.tolist()
+    formated_user_info = [
+        f'{first_name} {last_name} - {email}' for first_name, last_name, email in user_info]
+    print(f'{date} - {" | ".join(formated_user_info)}')
+
+```
+
+![daily](images/daily-presence.png)
 
 ## 4.4 Revisão do cliente:
 
