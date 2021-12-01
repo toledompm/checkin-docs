@@ -1,5 +1,11 @@
 # Resumo:
 
+Com novos modelos de trabalho que envolvem tanto a jornada no escritório como a distância surgindo fica cada vez mais difícil para gerentes de organizações acompanharem o comparecimento de seus colaboradores. Uma das empresas que adotou o modelo híbrido, e todos os desafios que este modelo trás, foi a JB3 Investimentos, um escritório de Assessoria de Investimentos de Santa Catarina. Eles buscam uma forma simples de seus colaboradores registrarem suas presenças nos escritórios físicos, para depois analisar os dados salvos, gerando relatórios para acompanhar a adoção a nova jornada de trabalhoCom novos modelos de trabalho que envolvem tanto a jornada no escritório como a distância surgindo fica cada vez mais difícil para gerentes de organizações acompanharem o comparecimento de seus colaboradores. Uma das empresas que adotou o modelo híbrido, e todos os desafios que este modelo trás, foi a JB3 Investimentos, um escritório de Assessoria de Investimentos de Santa Catarina. Eles buscam uma forma simples de seus colaboradores registrarem suas presenças nos escritórios físicos, para depois analisar os dados salvos, gerando relatórios para acompanhar a adoção da nova jornada.
+
+# Abstract
+
+With new work models emerging that involve both office hours and distance work, it is increasingly difficult for managers of organizations to keep up with the attendance of their employees. One of the companies that adopted the hybrid model, and all the challenges that this model brings, was JB3 Investimentos, an Investment Advisory Office in Santa Catarina. They are looking for a simple way for their employees to register their presence in physical offices, and then analyze the saved data, generating reports to keep track of the new attendence model.
+
 # 1 Introdução:
 
 A epidemia da covid-19 forçou nossa adaptação a várias questões da vida cotidiana. Uma significativa parcela da população brasileira precisou adequar-se às demandas do trabalho, que eram executadas majoritariamente de forma presencial, consolidando as modalidades de trabalho remoto e híbrido, exigidas pela necessidade de afastamento social.
@@ -26,10 +32,7 @@ _"...Uma dimensão adicional a ser considerada, é a tendência geral para o tra
 
 Porém, nem todas empresas que estão flexibilizando seus modelos de trabalho, têm a capacidade de desenvolver um sistema de controle, ou mudar para uma suíte de comunicação interna que inclui tal sistema.
 
-A JB3 Investimentos, um escritório de Assessoria de Investimentos de Santa Catarina, é uma dessas empresas e busca uma solução externa para gerenciar presenças de seus colaboradores. A JB3 Investimentos é o potencial cliente do sistema a ser desenvolvido neste trabalho de graduação, que deve corresponder às seguintes necessidades especificadas:
-
-- Uma forma autenticada de registrar presenças no escritório;
-- Uma forma dos gestores acompanharem o comparecimento dos colaboradores ao escritório.]
+A JB3 Investimentos, o potencial cliente do sistema a ser desenvolvido neste trabalho de graduação, adotou um sistema baseado em reservas e checkins, já que com distânciamento social não consegue acomodar todos funcionários em seu escritório físico. No entanto tem encontrado dificuldades em acompanhar as reservas e presenças de seus colaboradores, necessitando de alguma forma de fácil implantação e usabilidade para gerenciar reservas e checkins de seus colaboradores.
 
 ## 1.1 Objetivos do trabalho:
 
@@ -57,6 +60,13 @@ O Capítulo 5 apresenta as considerações finais deste trabalho a partir da an�
 # 2 Fundamentação técnica:
 
 Neste capítulo serão abordadas as tecnologias e padrões utilizados para o desenvolvimento do sistema. Assim como justificações para decisões técnicas.
+
+## 2.1 Requisitos do cliente:
+
+Para solucionar o problema citado foi requisitado um sistema que possibilite:
+
+- Funcionários realizarem seu checkin de forma autenticada e segura, registrando data, horário e local;
+- Ferramentas de admnistração, para gestores acompanharem a utilização do sistema.
 
 ## 2.1 API (Application Programming Interface):
 
@@ -802,10 +812,6 @@ Admnistradores do sistema com acesso a base de dados conseguem gerar dashboards 
 ### 4.2.1 Porcentagem de presença por colaborador:
 
 ### 4.2.2 Colaboradores presentes por dia:
-
-## 4.3 Cadastrando colaboradores e totens:
-
-O cadastro pode ser feito através de inserções diretas na base de dados do sistema. Para isto foi fornecido um script, além de uma planilha a ser preenchida com os dados dos novos totens e colaboradores a serem inseridos.
 
 ## 4.4 Revisão do cliente:
 
