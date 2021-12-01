@@ -848,15 +848,17 @@ Esta análise compara o número de reservas feitas, com o número de checkins re
 
 ```python
 def get_frequency(user):
-    reservations_made = reservations['user_id'][reservations['user_id'] == user.id].count(
-    )
-    reservations_with_checkins = reservations_x_checkin['user_id'][reservations_x_checkin['user_id'] == user.id].count(
-    )
+    reservations_made = reservations["user_id"][
+        reservations["user_id"] == user.id
+    ].count()
+    reservations_with_checkins = reservations_x_checkin["user_id"][
+        reservations_x_checkin["user_id"] == user.id
+    ].count()
 
     return round((reservations_with_checkins / reservations_made) * 100, 2)
 
 
-users['frequency'] = users.apply(lambda row: get_frequency(row), axis=1)
+users["frequency"] = users.apply(lambda row: get_frequency(row), axis=1)
 ```
 
 ![frequency](images/frequency.png)
